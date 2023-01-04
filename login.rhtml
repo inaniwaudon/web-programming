@@ -1,0 +1,63 @@
+<%# encoding: utf-8 %>
+<%
+require "cgi"
+cgi = CGI.new
+%>
+<!doctype html>
+<html>
+  <head>
+    <title>サインイン・サインアップ - 位置情報共有アプリケーション</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0">
+    <link href="common.css" rel="stylesheet" type="text/css" />
+    <link href="login.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <%= cgi["method"] %>
+    <div id="page">
+      <header id="top-header">
+        <a href="index.rhtml"><h1>位置情報共有アプリケーション</h1></a>
+      </header>
+      <main>
+        <div class="signin-signup">
+          <h2>サインイン</h2>
+          <form action="login.rhtml" method="post" class="form">
+            <div>
+              <label>
+                <div class="form-header">ID <span class="type-label required-label">必須</span></div>
+                <input type="text" name="id" />
+              </label>
+            </div>
+            <div>
+              <label>
+                <div class="form-header">パスワード <span class="type-label required-label">必須</span></div>
+                <input type="text" name="password" />
+              </label>
+            </div>
+            <input type="hidden" name="method" value="signup" />
+            <div><input type="submit" value="ログインする" class="submit-input" /></div>
+          </form>
+        </div>
+        <div class="signin-signup">
+          <h2>サインアップ</h2>
+          <form action="login.rhtml" method="post" class="form">
+            <div>
+              <label>
+                <div class="form-header">ID <span class="type-label required-label">必須</span></div>
+                <input type="text" name="id" />
+              </label>
+            </div>
+            <div>
+              <label>
+                <div class="form-header">パスワード <span class="type-label required-label">必須</span></div>
+                <input type="text" name="password" />
+              </label>
+            </div>
+            <input type="hidden" name="method" value="signup" />
+            <div><input type="submit" value="登録する" class="submit-input" /></div>
+          </form>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
