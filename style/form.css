@@ -1,45 +1,8 @@
-html, body {
-  margin: 0;
-  padding: 0;
-  background: #ffd700;
-}
-
-#page {
-  margin: 0;
-}
-
-#top-header {
-  padding: 20px 30px;
-  background: #fff;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-}
-
-h1 {
-  margin: 0;
-}
-
-#top-navigation {
-  margin: 10px 0;
-  padding: 4px 8px;
-}
-
-#top-navigation ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: flex;
-  gap: 20px;
-}
-
-#top-navigation a {
-  color: #333;
-}
-
-main {
-  padding: 20px 30px;
-}
-
 /* form */
+.form-card {
+  padding: 14px 20px 16px 20px;
+}
+
 .form {
   display: flex;
   flex-direction: column;
@@ -83,7 +46,22 @@ main {
 }
 
 .form-description {
+  height: 14px;
   color: #666;
   font-size: 14px;
   margin-top: 6px;
+}
+
+/* input */
+.form-input {
+  width: calc(100% - 20px);
+  height: 16px;
+  line-height: 16px;
+  font-size: 16px;
+  font-family: sans-serif;
+  padding: 10px;
+  border-top: none;
+  border-right: none;
+  border-bottom: solid 1px #999;
+  border-left: none;
 }

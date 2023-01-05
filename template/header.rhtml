@@ -1,15 +1,16 @@
+<%# encoding: utf-8 %>
 <header id="top-header">
-  <h1>位置情報共有アプリケーション</h1>
+  <h1><a href="index.rb">位置情報共有アプリケーション</a></h1>
   <nav id="top-navigation">
     <ul>
       <li><a href="index.rb">トップページ</a></li>
       <li><a href="footprint.rb">これまでのあしあと</a></li>
-      <li><a href="all-place.rb">全体での最新投稿</a></li>
+      <li><a href="all-visit.rb">全体での最新投稿</a></li>
     </ul>
   </nav>
   <div>
-    <% if id != nil then %>
-      あなたは <strong><%= id %></strong> でログイン中です。<a href="logout.rb">サインアウト</a>
+    <% if user_id != nil then %>
+      あなたは <strong><%= CGI.escapeHTML(user_id) %></strong> でログイン中です。<a href="logout.rb">サインアウト</a>
     <% else %>
       ログインしていません。<a href="login.rb">サインイン・サインアップ</a>
     <% end %>

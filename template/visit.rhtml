@@ -1,0 +1,18 @@
+<%# encoding: utf-8 %>
+<div class="visit-card card">
+  <div class="content">
+    <header>
+      <h2><%= CGI.escapeHTML(place_name) %></h2>
+      <p class="user">@<%= CGI.escapeHTML(user_id) %></p>
+      <p class="description">
+        <date><%= CGI.escapeHTML(date) %></date>・<%= is_public ? "一般公開" : "限定公開" %>
+      </p>
+    </header>
+    <% if comment then %>
+      <p class="comment"><%= CGI.escapeHTML(comment) %></p>
+    <% end %>
+  </div>
+  <% if image then %>
+    <img src="img/<%= id %>.jpg" class="img" />
+  <% end %>
+</div>

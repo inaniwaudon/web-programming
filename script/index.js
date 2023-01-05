@@ -1,5 +1,7 @@
 window.onload = () => {
   const yourPlace = document.getElementById("your-place");
+  const inputPlace = document.getElementById("input-place");
+  const placeCandidate = document.getElementById("place-candidate");
 
   const successÇallback = (coords) => {
     let message;
@@ -17,4 +19,17 @@ window.onload = () => {
   };
 
   navigator.geolocation.getCurrentPosition(successÇallback, errorCallback);
+
+  inputPlace.addEventListener("keydown", (e) => {
+    if (e.isComposing) {
+      return;
+    }
+    placeCandidate.innerHTML = "";
+    const candidates = places.filter(place => place.indexOf(e.target.value) == 0);
+    for (const candidate of candidates) {
+      const option = document.createElement("option");
+      option.value = candidate;
+      placeCandidate.appendChild(option);
+    }
+  });
 };

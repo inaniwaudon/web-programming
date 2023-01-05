@@ -1,0 +1,88 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #ffd700;
+}
+
+#page {
+  margin: 0;
+}
+
+#top-header {
+  padding: 20px 30px;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+h1 {
+  margin: 0;
+}
+
+h1 a {
+  color: #333;
+  text-decoration: none;
+}
+
+/* top navigation */
+#top-navigation {
+  margin: 14px 0;
+}
+
+#top-navigation ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+}
+
+#top-navigation li {
+  margin-right: 14px;
+}
+
+#top-navigation li + li {
+  padding-left: 14px;
+  border-left: solid 1px #ccc;
+}
+
+#top-navigation a {
+  color: #333;
+  text-decoration: none;
+}
+
+#top-navigation a:hover {
+  color: #999;
+}
+
+main {
+  padding: 20px 30px;
+}
+
+h2.title {
+  margin-top: 0;
+}
+
+/* card */
+.card {
+  width: 300px;
+  flex-shrink: 0;
+  flex-grow: 0;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* error */
+.errors {
+  color: #fff;
+  margin-bottom: 10px;
+  padding: 6px 14px;
+  border-radius: 4px;
+  background: #c00;
+}
+
+.errors p {
+  margin: 0;
+}

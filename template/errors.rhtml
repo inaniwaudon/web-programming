@@ -1,0 +1,8 @@
+<%# encoding: utf-8 %>
+<% if errors.length > 0 then %>
+<div class="errors">
+  <% errors.each do |e| %>
+    <p><%= CGI.escapeHTML(e) %></p>
+  <% end %>
+</div>
+<% end %>
