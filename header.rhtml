@@ -1,0 +1,17 @@
+<header id="top-header">
+  <h1>位置情報共有アプリケーション</h1>
+  <nav id="top-navigation">
+    <ul>
+      <li><a href="index.rb">トップページ</a></li>
+      <li><a href="footprint.rb">これまでのあしあと</a></li>
+      <li><a href="all-place.rb">全体での最新投稿</a></li>
+    </ul>
+  </nav>
+  <div>
+    <% if id != nil then %>
+      あなたは <strong><%= id %></strong> でログイン中です。<a href="logout.rb">サインアウト</a>
+    <% else %>
+      ログインしていません。<a href="login.rb">サインイン・サインアップ</a>
+    <% end %>
+  </div>
+</header>

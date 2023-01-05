@@ -1,9 +1,22 @@
-main {
+.contents {
   display: flex;
   gap: 20px;
 }
 
+.errors {
+  color: #fff;
+  margin-bottom: 10px;
+  padding: 6px 14px;
+  border-radius: 4px;
+  background: #c00;
+}
+
+.errors p {
+  margin: 0;
+}
+
 .signin-signup {
+  width: 200px;
   padding: 20px;
   border-radius: 10px;
   background: #fff;

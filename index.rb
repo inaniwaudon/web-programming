@@ -1,5 +1,20 @@
-<%# encoding: utf-8 %>
-<% login_status = false %>
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+require "cgi"
+require "cgi/session"
+require "erb"
+
+cgi = CGI.new
+session = CGI::Session.new(cgi)
+
+id = session["id"]
+erb = ERB.new(File.read("header.rhtml"))
+
+session.close
+print cgi.header("text/html; charset=utf-8")
+
+print <<EOF
 <!doctype html>
 <html>
   <head>
@@ -12,22 +27,10 @@
   </head>
   <body>
     <div id="page">
-      <header id="top-header">
-        <h1>位置情報共有アプリケーション</h1>
-        <nav id="top-navigation">
-          <ul>
-            <li><a href="index.rhtml">トップページ</a></li>
-            <li><a href="footprint.rhtml">これまで行ったところ</a></li>
-            <li><a href="list.rhtml">全体での最新の共有</a></li>
-          </ul>
-        </nav>
-        <div>
-          <%= login_status ?
-            "あなたは <strong>gjrieghjriaemi</strong> でログイン中です。<a href=\"logout.rb\">ログアウト</a>" :
-            "ログインしていません。<a href=\"login.rhtml\">サインイン または サインアップ</a>" %>
-        </div>
-      </header>
-      <main>      
+EOF
+print erb.result(binding)
+print <<EOF
+      <main>
         <form action="submit.rb" class="form">
           <div>
             <div class="form-header">
@@ -44,7 +47,7 @@
           <div>
             <div class="form-header">詳細位置</div>
             <div id="your-place"></div>
-            <label><input type="checkbox" checked/>詳しい位置を隠す</label>
+            <label><input type="checkbox" />正確な位置を含める</label>
           </div>
           <div><input type="submit" value="共有する！" class="submit-input" /></div>
         </form>
@@ -52,3 +55,4 @@
     </div>
   </body>
 </html>
+EOF

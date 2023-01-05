@@ -81,3 +81,9 @@ main {
   box-sizing: content-box;
   background: #ff8c00;
 }
+
+.form-description {
+  color: #666;
+  font-size: 14px;
+  margin-top: 6px;
+}
