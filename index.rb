@@ -11,17 +11,22 @@ session = CGI::Session.new(cgi)
 header_erb = ERB.new(File.read("template/header.rhtml"))
 user_id = session["id"]
 
-# connect database
-db = SQLite3::Database.new("data.db")
-places = []
-db.transaction {
-  places = db.execute("SELECT name FROM place;")
-}
-db.close
-places = places.map { |place| "\"#{CGI.escapeHTML(place[0])}\"" }.join(", ")
-
 session.close
 print cgi.header("text/html; charset=utf-8")
+
+# connect database
+places = []
+begin
+  db = SQLite3::Database.new("data.db")
+  db.transaction {
+    places = db.execute("SELECT name FROM place;")
+  }
+  db.close
+rescue
+  print "データベースエラーが発生しました。システムの管理者にお問い合わせください。"
+  exit
+end
+places = places.map { |place| "\"#{CGI.escapeHTML(place[0])}\"" }.join(", ")
 
 print <<EOF
 <!doctype html>
@@ -53,6 +58,14 @@ print <<EOF
       #map-description {
         font-size: 14px;
       }
+      #map-description a {
+        text-decoration: underline;
+        cursor: pointer;
+      }
+      .current-location-list {
+        margin: 0;
+        padding: 0 0 0 2em;
+      }
     </style>
   </head>
   <body>
@@ -83,8 +96,8 @@ if user_id != nil then
               <label><input name="map-in-detail" type="checkbox" id="map-in-detail"  />詳細位置を含める</label>
               <div id="map" class="disabled"></div>
               <div id="map-description">
-                <div>中央の緯度経度を詳細位置に設定します。</div>
-                <div id="your-place"></div>
+                <p>中央の緯度経度を詳細位置に設定します。</p>
+                <p id="your-place">現在地を取得中です</p>
               </div>
             </div>
             <div>

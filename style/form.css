@@ -43,6 +43,7 @@
   cursor: pointer;
   box-sizing: content-box;
   background: #ff8c00;
+  -webkit-appearance: none;
 }
 
 .form-description {
@@ -64,6 +65,8 @@
   border-right: none;
   border-bottom: solid 1px #999;
   border-left: none;
+  border-radius: 0;
+  background: #f3f3f3;
 }
 
 /* search */

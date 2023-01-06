@@ -1,4 +1,5 @@
 window.onload = () => {
+  // dom
   const mapInDetail = document.getElementById("map-in-detail");
   const map = document.getElementById("map");
   const yourPlace = document.getElementById("your-place");
@@ -6,23 +7,6 @@ window.onload = () => {
   const placeCandidate = document.getElementById("place-candidate");
   const latitudeInput = document.getElementById("latitude-input");
   const longitudeInput = document.getElementById("longitude-input");
-
-  const successÇallback = (coords) => {
-    let message;
-    if (coords.latitude === undefined || coords.longitude === undefined) {
-      message = "現在地の取得に失敗しました。";
-    }
-    else {
-      message = `現在地：緯度 ${coords.latitude}、経度 ${coords.latitude}`;
-    }
-    yourPlace.innerHTML = message;
-  };
-
-  const errorCallback = () => {
-    yourPlace.innerHTML = "位置情報の取得に失敗しました。ブラウザの設定から位置情報の取得を有効にしてください。";
-  };
-
-  navigator.geolocation.getCurrentPosition(successÇallback, errorCallback);
 
   // candidate
   inputPlace.addEventListener("keydown", (e) => {
@@ -39,19 +23,27 @@ window.onload = () => {
   });
 
   // map
-  const setCoordinates = () => {
-    latitudeInput.value = leafletMap.getCenter().lat;
-    longitudeInput.value = leafletMap.getCenter().lng;
-  }
+  const initialLatitude = 35.66572;
+  const initialLongitude = 139.73100;
 
   const leafletMap = L.map("map", {
-    center: [35.66572, 139.73100],
+    center: [initialLatitude, initialLongitude],
     zoom: 17,
   });
   const tileLayer = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "© <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>",
   });
   tileLayer.addTo(leafletMap);
+
+  const setCoordinates = (latitude, longitude) => {
+    latitudeInput.value = latitude;
+    longitudeInput.value = longitude;leafletMap.getCenter().lng;
+  }
+
+  const panTo = (latitude, longitude) => {
+    leafletMap.panTo(new L.LatLng(latitude, longitude));
+    setCoordinates(latitude, longitude);
+  };
 
   const crossIcon = L.icon({
     iconUrl: "https://maps.gsi.go.jp/image/map/crosshairs.png",
@@ -67,11 +59,11 @@ window.onload = () => {
     crossMarker.setLatLng(leafletMap.getCenter());
   });
   leafletMap.on("moveend", () => {
-    setCoordinates();
+    setCoordinates(leafletMap.getCenter().lat, leafletMap.getCenter().lng);
   })
-  setCoordinates();
+  panTo(initialLatitude, initialLongitude);
 
-  // display map
+  // switch the display of the map
   mapInDetail.addEventListener("change", (e) => {
     if (e.target.checked) {
       map.classList.remove("disabled");
@@ -79,4 +71,29 @@ window.onload = () => {
       map.classList.add("disabled");
     }
   });
+
+  // current location
+  const successÇallback = (position) => {
+    const latitude = position.coords.latitude;
+    const longitude = position.coords.longitude;
+    if (latitude === undefined || longitude === undefined) {
+      yourPlace.innerHTML = "現在地の取得に失敗しました。";
+    }
+    else {
+      yourPlace.innerHTML = `現在地<ul class="current-location-list"><li>緯度 ${latitude}</li><li>経度 ${longitude}</li>`;
+      const a = document.createElement("a");
+      a.addEventListener("click", () => {
+        panTo(latitude, longitude);
+      });
+      a.innerHTML = "地図の中心を現在地に戻す";
+      yourPlace.appendChild(a);
+      panTo(latitude, longitude);
+    }
+  };
+
+  const errorCallback = () => {
+    yourPlace.innerHTML = "位置情報の取得に失敗しました。ブラウザの設定から位置情報の取得を有効にしてください。";
+  };
+
+  navigator.geolocation.getCurrentPosition(successÇallback, errorCallback);
 };

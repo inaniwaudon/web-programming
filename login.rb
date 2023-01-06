@@ -13,17 +13,23 @@ errors_erb = ERB.new(File.read("template/errors.rhtml"))
 user_id = session["id"]
 
 # redirect if the user is already signed in
-if session["id"] != nil then
+if user_id != nil then
   print cgi.header({ "status" => "REDIRECT", "Location" => "index.rb" })
   exit
 end
 
 # connect database
-db = SQLite3::Database.new("data.db")
 errors = []
+signup = false
+new_id = ""
 
-catch(:break) do
-  if cgi.key?("method") && cgi.key?("id") && cgi.key?("password") then
+begin
+  db = SQLite3::Database.new("data.db")
+
+  catch(:break) do
+    if !cgi.key?("method") || !cgi.key?("id") || !cgi.key?("password") then
+      throw :break
+    end
     new_id = cgi["id"]
     password = cgi["password"]
     method = cgi["method"]
@@ -47,7 +53,7 @@ catch(:break) do
         errors.push("指定されたアカウントは存在しません")
         throw :break
       end
-      
+        
       if password_lines.map{ |line| line[0] }.include?(password) then
         # redirect
         session["id"] = new_id
@@ -72,11 +78,17 @@ catch(:break) do
       db.transaction {
         db.execute("INSERT INTO user VALUES(?, ?);", new_id, password)
       }
+      signup = true
     end
   end
+
+  db.close
+rescue
+  print cgi.header("text/html; charset=utf-8")
+  print "データベースエラーが発生しました。システムの管理者にお問い合わせください。"
+  exit
 end
 
-db.close
 session.close
 print cgi.header("text/html; charset=utf-8")
 
@@ -93,6 +105,7 @@ print <<EOF
     <style>
       .contents {
         display: flex;
+        flex-wrap: wrap;
         gap: 20px;
       }
       .signin-signup-card h2 {
@@ -105,6 +118,11 @@ print <<EOF
       #{header_erb.result(binding)}
       <main>
         #{errors_erb.result(binding)}
+EOF
+if signup then
+  print "<p>ID：#{CGI.escapeHTML(new_id)} を登録しました。再度サインインしてください。</p>"
+end
+print <<EOF
         <div class="contents">
           <div class="signin-signup-card form-card card">
             <h2>サインイン</h2>

@@ -11,18 +11,26 @@ session = CGI::Session.new(cgi)
 header_erb = ERB.new(File.read("template/header.rhtml"))
 user_id = session["id"]
 
+session.close
+print cgi.header("text/html; charset=utf-8")
+
 # connect database
-db = SQLite3::Database.new("data.db")
 visits = []
-db.results_as_hash = true
-db.transaction {
-  visits = db.execute(
-    "SELECT visit.id, place, user_id, datetime(date, 'localtime') as date, comment, image, latitude, longitude
-    FROM visit, place
-    WHERE public = 1 and visit.place = place.name limit 50;"
-  )
-}
-db.close
+begin
+  db = SQLite3::Database.new("data.db")
+  db.results_as_hash = true
+  db.transaction {
+    visits = db.execute(
+      "SELECT visit.id, place, user_id, datetime(date, 'localtime') as date, comment, image, latitude, longitude
+      FROM visit, place
+      WHERE public = 1 and visit.place = place.name limit 50;"
+    )
+  }
+  db.close
+rescue
+  print "データベースエラーが発生しました。システムの管理者にお問い合わせください。"
+  exit
+end
 
 # filter
 keyword = ""
@@ -32,9 +40,6 @@ if cgi.key?("search") && cgi["search"].length > 0 then
     Regexp.new(cgi["search"], Regexp::IGNORECASE).match(visit["place"])
   }
 end
-
-session.close
-print cgi.header("text/html; charset=utf-8")
 
 print <<EOF
 <!doctype html>
