@@ -23,8 +23,18 @@
 
 .visit-card h2 {
   width: 200px;
+  color: #333;
   font-size: 20px;
   margin: 0;
+}
+
+.visit-card h2 a {
+  color: #333;
+  text-decoration: 0;
+}
+
+.visit-card h2 a:hover {
+  color: #999;
 }
 
 .visit-card .user, .visit-card .description {

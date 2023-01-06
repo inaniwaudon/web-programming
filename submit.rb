@@ -15,7 +15,7 @@ user_id = session["id"]
 errors = []
 if user_id == nil then
   errors.push("サインインが必要な操作です")
-elsif !cgi.key?("place") then
+elsif !cgi.key?("place") || !cgi.key?("latitude") || !cgi.key?("longitude") then
   errors.push("不正な操作です")
 elsif cgi["place"].length == 0 then
   errors.push("場所が指定されていません")
@@ -24,6 +24,11 @@ else
   db = SQLite3::Database.new("data.db")
   id = SecureRandom.uuid
   place = cgi["place"]
+
+  mapInDetail = cgi.key?("map-in-detail") && cgi["map-in-detail"] == "on"
+  latitude = mapInDetail ? cgi["latitude"] : nil
+  longitude = mapInDetail ? cgi["longitude"] : nil
+  
   comment = cgi.key?("comment") && cgi["comment"].length > 0 ? cgi["comment"] : nil
   is_public = cgi.key?("public") && cgi["public"] == "on" ? 1 : 0
   image = 0
@@ -38,7 +43,7 @@ else
   end
 
   db.transaction {
-    db.execute("REPLACE INTO place VALUES(?, NULL, NULL)", place)
+    db.execute("REPLACE INTO place VALUES(?, ?, ?)", place, latitude, longitude)
     db.execute("INSERT INTO visit VALUES(?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?);",
       id, place, user_id, comment, is_public, image)
   }

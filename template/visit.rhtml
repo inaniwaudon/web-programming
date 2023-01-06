@@ -2,7 +2,14 @@
 <div class="visit-card card">
   <div class="content">
     <header>
-      <h2><%= CGI.escapeHTML(place_name) %></h2>
+      <h2>
+        <% if latitude and longitude then %>
+          <a href="<%= "https://www.google.co.jp/maps?ll=#{latitude},#{longitude}" %>">
+        <% end %>
+          <%= CGI.escapeHTML(place_name) %>
+        <%= latitude && longitude ? "</a>" : "" %>
+        </a>
+      </h2>
       <p class="user">@<%= CGI.escapeHTML(user_id) %></p>
       <p class="description">
         <date><%= CGI.escapeHTML(date) %></date>・<%= is_public ? "一般公開" : "限定公開" %>

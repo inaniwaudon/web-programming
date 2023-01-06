@@ -19,13 +19,22 @@ if user_id != nil then
   db.results_as_hash = true
   db.transaction {
     visits = db.execute(
-      "SELECT visit.id, place, user_id, datetime(date, 'localtime') as date, comment, image, public
+      "SELECT visit.id, place, user_id, datetime(date, 'localtime') as date, comment, image, public, latitude, longitude
       FROM visit, place
       WHERE user_id = ? and visit.place = place.name;",
       user_id
     )
   }
   db.close
+
+  # filter
+  keyword = ""
+  if cgi.key?("search") && cgi["search"].length > 0 then
+    keyword = cgi["search"]
+    visits = visits.filter { |visit|
+      Regexp.new(cgi["search"], Regexp::IGNORECASE).match(visit["place"])
+    }
+  end
 end
 
 session.close
@@ -40,23 +49,35 @@ print <<EOF
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0">
     <link href="style/common.css" rel="stylesheet" type="text/css" />
     <link href="style/visit.css" rel="stylesheet" type="text/css" />
+    <link href="style/form.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
     <div id="page">
       #{header_erb.result(binding)}
       <main>
-        <h2 class="title">これまでのあしあと</h2>
+        <h2 class="title">これまでのあしあと</h2>        
 EOF
 
 
 if user_id != nil then
-  print "<div class=\"visit-list\">";
+  print <<EOF
+        <div class="search-box">
+          <form action="all-visit.rb" method="get">
+            <input type="text" name="search" placeholder="正規表現を使用できます" value="#{keyword}" class="form-input" />
+            <input type="submit" value="検索" class="submit-input" />
+          </form>
+        </div>
+        <div class="visit-list">
+EOF
+
   visits.each do |visit|
     place_erb = ERB.new(File.read("template/visit.rhtml"))
     print place_erb.result_with_hash(
       id: visit["id"],
       user_id: visit["user_id"],
       place_name: visit["place"],
+      latitude: visit["latitude"],
+      longitude: visit["longitude"],
       date: visit["date"],
       comment: visit["comment"],
       is_public: visit["public"] == 1,
